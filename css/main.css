@@ -33,3 +33,14 @@ figure svg {
 input:invalid {
     color: red;
 }
+
+input.wrong {
+    color: red;
+}
+em.wrong {
+    color: orange;
+}
+
+.hidden {
+    display: none;
+}

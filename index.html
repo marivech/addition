@@ -24,12 +24,13 @@
           <em id="first-term-num"></em>
           <span>+</span>
           <em id="second-term-num"></em>
+          <span>=</span>
+          <em id="sum-field">?</em>
       </section>
       <section>
           <form action="get">
-              <input id="first-term-check" type="number" min="1" max="20">
-              <input id="second-term-check" type="number" min="1" max="20">
-              <input id="sum" type="number">
+              <input id="first-term-check" data-field="1" type="number" min="1" max="20">
+              <input id="second-term-check" class="hidden" data-field="2" type="number" min="1" max="20">
           </form>
       </section>
       <figure>
@@ -37,10 +38,11 @@
           <svg xmlns="http://www.w3.org/2000/svg">
               <path id="first-term" d="" stroke="#CD4692" stroke-width="2px" fill="transparent"/>
 
-              <path id="second-term" d="M272 105 A3 1, 0, 0 1, 300 105
-            v -10
-            m -8 3
-            l 8 3" stroke="#CD4692" stroke-width="2px" fill="transparent"/>
+              <path id="second-term" d="" stroke="#CD4692" stroke-width="2px" fill="transparent"/>
+
+              <!--v -10-->
+              <!--m -8 3-->
+              <!--l 8 3"-->
           </svg>
 
       </figure>
