@@ -1,20 +1,12 @@
-// length of 1 point on ruler
-var UNIT = 39;
-
-
-var Y = 105;
-
 // all we need is to add endpoint
-var ELLIPSE_CONST = 'A3 1, 0, 0 1,';
-
 var $firstTermCurve = $('path#first-term');
 var $secondTermCurve = $('path#second-term');
 
 var $firstTermCheck = $('input#first-term-check');
 var $secondTermCheck = $('input#second-term-check');
 
-var $firstTermNum = $('em#first-term-num');
-var $secondTermNum = $('em#second-term-num');
+var $firstTermNum = $('mark#first-term-num');
+var $secondTermNum = $('mark#second-term-num');
 var $sumField = $('#sum-field');
 
 class Sum {
@@ -32,7 +24,7 @@ class Sum {
   }
 
   checkSum(variant) {
-    return parseInt(variant) === this.calculateSum()
+    return parseInt(variant) === this.calculateSum();
   }
 
   getRandomInt(min, max) {
@@ -44,23 +36,36 @@ class Sum {
 
 class Curve {
   constructor(num1, num2) {
-    this.start = num1;
-    this.end = num2;
+    this.UNIT = 39;
+    this.start = num1 * this.UNIT;
+    this.end = num2 * this.UNIT;
+
+    this.Y = 105;
+    this.ELLIPSE_CONST = 'A3 1, 0, 0 1,';
+
+    // length of 1 point on ruler
+
     this.curvePath = this.calculatePath(num1, num2);
   }
   // compose path for curve with set numbers
   // example: M0 105 A3 1, 0, 0 1, 272 105
   calculatePath(startPoint, endPoint) {
-    var end = endPoint * UNIT;
-    var start = startPoint * UNIT;
+    var end = endPoint * this.UNIT;
+    var start = startPoint * this.UNIT;
 
-    var curve = ELLIPSE_CONST + ' ' + end + ' ' + Y;
+    var curve = this.ELLIPSE_CONST + ' ' + end + ' ' + this.Y;
 
-    return 'M' + start + ' ' + Y + curve;
+    return 'M' + start + ' ' + this.Y + curve;
   }
 
   drawCurve(term) {
     term.attr('d', this.curvePath);
+  }
+
+  moveInputToCurve(field) {
+    var leftOffset = (this.end - this.start) / 2 + this.start - 10;
+    var topOffset = leftOffset * 0.08;
+    field.closest('.input-box').css({left: leftOffset, top: topOffset});
   }
 }
 
@@ -73,10 +78,10 @@ function startMath() {
   var SecondCurve = new Curve(Math.firstTerm, Math.firstTerm + Math.secondTerm);
 
   FirstCurve.drawCurve($firstTermCurve);
+  FirstCurve.moveInputToCurve($firstTermCheck);
 
   var firstCorrect = false;
   var secondCorrect = false;
-  var sumCorrect = false;
 
   $firstTermCheck.blur(function(e) {
       var $field = $(e.currentTarget);
@@ -86,6 +91,7 @@ function startMath() {
         $secondTermCheck.removeClass('hidden');
 
         SecondCurve.drawCurve($secondTermCurve);
+        SecondCurve.moveInputToCurve($secondTermCheck);
       }
   });
 
@@ -95,26 +101,21 @@ function startMath() {
 
     if (checkNum($field, Math)) {
       secondCorrect = true;
-      transformToInput($sumField, Math);
+      transformSumToInput($sumField, Math);
     }
   });
 }
 
-function writeTask(first, second) {
-  $firstTermNum.append(first);
-  $secondTermNum.append(second);
-}
-
 function isFirstField(field) {
-  return field.dataset.field == 1 ? true : false;
+  return parseInt(field.dataset.field) === 1;
 }
 
 function isCorrect(field, Num, isFirst) {
   if (isFirst) {
-    return (parseInt(field.value) === Num.firstTerm) ? true: false
+    return parseInt(field.value) === Num.firstTerm;
   }
 
-  return (parseInt(field.value) === Num.secondTerm) ? true: false
+  return parseInt(field.value) === Num.secondTerm;
 }
 
 function checkNum($field, Num) {
@@ -153,16 +154,15 @@ function markField(field, isCorrect, isFirst) {
 
 function transformToSpan(field) {
   $(field).each(function() {
-    $("<span />", { text: this.value}).insertAfter(this);
+    $("<span />", { text: this.value, class: 'solved'}).insertAfter(this);
     $(this).hide();
   });
 }
 
-function transformToInput(field, Math) {
+function transformSumToInput(field, Math) {
   $(field).each(function() {
-    $("<input />", { id: this.id, type: 'number'}).insertAfter(this).blur(function(e) {
+    $("<input />", { id: this.id, type: 'number', min: 1, max:20}).insertAfter(this).blur(function(e) {
       var $field = $(e.currentTarget);
-      console.log($field);
       $field.submit();
 
       if (Math.checkSum($field[0].value)) {
@@ -176,6 +176,10 @@ function transformToInput(field, Math) {
   });
 }
 
+function writeTask(first, second) {
+  $firstTermNum.append(first);
+  $secondTermNum.append(second);
+}
 
 $(document).ready(function() {
  startMath();
