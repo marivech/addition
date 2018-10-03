@@ -27,7 +27,6 @@ input {
     width: 20px;
 }
 
-input:invalid,
 input.wrong {
     color: red;
 }

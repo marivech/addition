@@ -1,4 +1,3 @@
-// all we need is to add endpoint
 var $firstTermCurve = $('path#first-term');
 var $secondTermCurve = $('path#second-term');
 
@@ -36,14 +35,14 @@ class Sum {
 
 class Curve {
   constructor(num1, num2) {
+    // length of 1 point on ruler
     this.UNIT = 39;
+
     this.start = num1 * this.UNIT;
     this.end = num2 * this.UNIT;
 
     this.Y = 105;
     this.ELLIPSE_CONST = 'A3 1, 0, 0 1,';
-
-    // length of 1 point on ruler
 
     this.curvePath = this.calculatePath(num1, num2);
   }
