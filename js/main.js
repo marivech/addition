@@ -47,6 +47,7 @@ class Curve {
 
     this.curvePath = this.calculatePath(num1, num2);
   }
+
   // compose path for curve with set numbers
   // example: M0 105 A3 1, 0, 0 1, 272 105
   calculatePath(startPoint, endPoint) {
@@ -54,8 +55,9 @@ class Curve {
     var start = startPoint * this.UNIT;
 
     var curve = this.ELLIPSE_CONST + ' ' + end + ' ' + this.Y;
+    var arrowHead = ' v-10 m -5 2 l5 7';
 
-    return 'M' + start + ' ' + this.Y + curve;
+    return 'M' + start + ' ' + this.Y + curve + arrowHead;
   }
 
   drawCurve(term) {
@@ -80,27 +82,23 @@ function startMath() {
   FirstCurve.drawCurve($firstTermCurve);
   FirstCurve.moveInputToCurve($firstTermCheck);
 
-  var firstCorrect = false;
-  var secondCorrect = false;
-
-  $firstTermCheck.blur(function(e) {
+  $firstTermCheck.keyup(function(e) {
       var $field = $(e.currentTarget);
       $field.submit();
       if (checkNum($field, Math)) {
-        firstCorrect = true;
-        $secondTermCheck.removeClass('hidden');
+        $secondTermCheck.removeClass('hidden').focus();
+
 
         SecondCurve.drawCurve($secondTermCurve);
         SecondCurve.moveInputToCurve($secondTermCheck);
       }
   });
 
-  $secondTermCheck.blur(function(e) {
+  $secondTermCheck.keyup(function(e) {
     var $field = $(e.currentTarget);
     $field.submit();
 
     if (checkNum($field, Math)) {
-      secondCorrect = true;
       transformSumToInput($sumField, Math);
     }
   });
@@ -161,7 +159,7 @@ function transformToSpan(field) {
 
 function transformSumToInput(field, Math) {
   $(field).each(function() {
-    $("<input />", { id: this.id, type: 'number', min: 1, max:20}).insertAfter(this).blur(function(e) {
+    $("<input />", { id: this.id, type: 'text'}).insertAfter(this).keyup(function(e) {
       var $field = $(e.currentTarget);
       $field.submit();
 
@@ -171,7 +169,7 @@ function transformSumToInput(field, Math) {
       } else {
         $field.addClass('wrong');
       }
-    });
+    }).focus();
     $(this).remove();
   });
 }
